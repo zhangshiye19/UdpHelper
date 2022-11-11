@@ -8,6 +8,7 @@
 #include <QUdpSocket>
 #include <QStandardItemModel>
 #include <QFileDialog>
+#include <math.h>
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
