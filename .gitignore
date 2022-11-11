@@ -75,3 +75,6 @@ Thumbs.db
 cmake-build-debug-visual-studio
 cmake-build-release
 cmake-build*
+
+# clion
+.idea
