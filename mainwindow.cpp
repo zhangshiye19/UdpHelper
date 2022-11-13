@@ -7,17 +7,16 @@
 MainWindow::MainWindow(QWidget *parent)
         : QMainWindow(parent), ui(new Ui::MainWindow) {
     ui->setupUi(this);
-    QObject::connect(ui->dataTableWidget, &QTableWidget::itemChanged, this, &MainWindow::countDataBytes);
+//    QObject::connect(ui->dataTableWidget, &QTableWidget::itemChanged, this, &MainWindow::countTotalBytesNum);
 
     // udp
-    m_udpS = new QUdpSocket(this);
-    m_udpS->bind(QHostAddress::Any, this->remote_port, QUdpSocket::ShareAddress);
-    QObject::connect(this->m_udpS, &QUdpSocket::readyRead, this, &MainWindow::onReceiveUdpMsg);
+    this->setUdpBind();
+//    m_udpS = new QUdpSocket(this);
+//    m_udpS->bind(QHostAddress::Any, this->loc_port, QUdpSocket::ShareAddress);
+//    QObject::connect(this->m_udpS, &QUdpSocket::readyRead, this, &MainWindow::onReceiveUdpMsg);
 
     // 配置IP和端口
-//    this->remote_ip = ui->configLineEditIP->text();
-//    this->remote_port = ui->configLineEditPort->text().toUShort();
-    applyConfig();
+    setConfigText();
 
     // msg table
     msgTableMode = new QStandardItemModel();
@@ -32,7 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
     ui->msgTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     // 双击
-    QObject::connect(ui->msgTable,&QTableView::doubleClicked,this,&MainWindow::onClickedMsgTable);
+    QObject::connect(ui->msgTable, &QTableView::doubleClicked, this, &MainWindow::onClickedMsgTable);
 
     // 总字节数标签
     QObject::connect(ui->toolButton, &QToolButton::clicked, this, &MainWindow::countTotalBytesNum);
@@ -181,8 +180,15 @@ void MainWindow::on_buttonSend_clicked() {
 void MainWindow::on_configButtonApply_clicked() {
     this->remote_ip = ui->configLineEditIP->text();
     this->remote_port = ui->configLineEditPort->text().toUShort();
+    this->loc_port = ui->configLineEditLocPort->text().toUShort();
+    this->setUdpBind();
+}
 
-    applyConfig();
+void MainWindow::setUdpBind() {
+    delete m_udpS;
+    m_udpS = new QUdpSocket(this);
+    m_udpS->bind(QHostAddress::Any, this->loc_port, QUdpSocket::ShareAddress);
+    QObject::connect(this->m_udpS, &QUdpSocket::readyRead, this, &MainWindow::onReceiveUdpMsg);
 }
 
 
@@ -263,6 +269,9 @@ void MainWindow::writeDataTableFromMsg() {
 void
 MainWindow::addLogToMsgList(const QByteArray &data, quint64 length, const QString &fromIP, const QString &fromPort,
                             const QString &toIP, const QString &toPort) {
+    if (length == 0) {
+        return;
+    }
     const int rowCount = ui->msgTable->model()->rowCount();
     this->msgBytesList.append(data);
 
@@ -368,9 +377,10 @@ void MainWindow::loadDataTemplate(const QString &filename) {
     qFile.close();
 }
 
-void MainWindow::applyConfig() {
+void MainWindow::setConfigText() {
     ui->configLineEditIP->setText(this->remote_ip);
     ui->configLineEditPort->setText(QString::number(this->remote_port));
+    ui->configLineEditLocPort->setText(QString::number(this->loc_port));
 }
 
 void MainWindow::countTotalBytesNum() {
@@ -382,5 +392,5 @@ void MainWindow::countTotalBytesNum() {
         int lengthOfArray = ui->dataTableWidget->item(i, 3)->text().toInt();
         totalBytesNum += sizeOfType * lengthOfArray;
     }
-    ui->label_3->setText("总字节数："+QString::number(totalBytesNum));
+    ui->label_3->setText("总字节数：" + QString::number(totalBytesNum));
 }

@@ -42,6 +42,16 @@
         <widget class="QLineEdit" name="configLineEditPort"/>
        </item>
        <item>
+        <widget class="QLabel" name="label_4">
+         <property name="text">
+          <string>本地服务端口：</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QLineEdit" name="configLineEditLocPort"/>
+       </item>
+       <item>
         <spacer name="verticalSpacer">
          <property name="orientation">
           <enum>Qt::Vertical</enum>
@@ -161,7 +171,8 @@
             <string>刷新</string>
            </property>
            <property name="icon">
-            <iconset theme="view-refresh"/>
+            <iconset theme="view-refresh">
+             <normaloff>.</normaloff>.</iconset>
            </property>
            <property name="arrowType">
             <enum>Qt::NoArrow</enum>

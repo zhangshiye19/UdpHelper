@@ -67,7 +67,7 @@ private slots:
 
     void onClickedMsgTable(const QModelIndex &index);
 
-    void applyConfig();
+    void setConfigText();
 
     void countTotalBytesNum();
 
@@ -78,6 +78,9 @@ private:
     QStandardItemModel *msgTableMode;
     QString remote_ip = "127.0.0.1";
     quint16 remote_port = 10001;
+    quint16 loc_port = 10001;
     QList<QByteArray> msgBytesList;
+
+    void setUdpBind();
 };
 #endif // MAINWINDOW_H
