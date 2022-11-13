@@ -20,13 +20,13 @@ MainWindow::MainWindow(QWidget *parent)
     applyConfig();
 
     // msg table
-    msgListMode = new QStandardItemModel();
-//    msgListMode->rea
-    msgListMode->setColumnCount(3);
-    msgListMode->setHeaderData(0, Qt::Horizontal, "FROM");
-    msgListMode->setHeaderData(1, Qt::Horizontal, "TO");
-    msgListMode->setHeaderData(2, Qt::Horizontal, "LENGTH");
-    ui->msgTable->setModel(msgListMode);
+    msgTableMode = new QStandardItemModel();
+//    msgTableMode->rea
+    msgTableMode->setColumnCount(3);
+    msgTableMode->setHeaderData(0, Qt::Horizontal, "FROM");
+    msgTableMode->setHeaderData(1, Qt::Horizontal, "TO");
+    msgTableMode->setHeaderData(2, Qt::Horizontal, "LENGTH");
+    ui->msgTable->setModel(msgTableMode);
 //    ui->msgTable->resizeColumnsToContents();    // 自动调整列宽度
     ui->msgTable->horizontalHeader()->setStretchLastSection(true);  // 最后一个填充空白
     ui->msgTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
@@ -248,10 +248,13 @@ MainWindow::addLogToMsgList(const QByteArray &data, quint64 length, const QStrin
                             const QString &toIP, const QString &toPort) {
     const int rowCount = ui->msgTable->model()->rowCount();
     this->msgBytesList.append(data);
+
     QList<QStandardItem *> info{new QStandardItem(fromIP + ":" + fromPort),
                                 new QStandardItem(toIP + ":" + toPort),
                                 new QStandardItem(QString::number(length))};
-    msgListMode->insertRow(rowCount, info);
+    msgTableMode->insertRow(rowCount, info);
+//    QModelIndex index = ui->msgTable->currentIndex();
+//    this->msgTableMode->setData(index,data,Qt::UserRole);
 }
 
 void MainWindow::countDataBytes() {
@@ -288,9 +291,10 @@ void MainWindow::sendUdpMsg(const QByteArray &data) {
 }
 
 void MainWindow::onClickedMsgTable(const QModelIndex &index) {
-//    QStandardItemModel *msg_model = dynamic_cast<QStandardItemModel *>(ui->msgTable->msgListMode());
+//    QStandardItemModel *msg_model = dynamic_cast<QStandardItemModel *>(ui->msgTable->msgTableMode());
     int cur_row = index.row();
     QByteArray data = msgBytesList.at(cur_row);
+//    QByteArray data = this->msgTableMode->data(index,Qt::UserRole).toByteArray();
     this->setMsgText(data);
 }
 

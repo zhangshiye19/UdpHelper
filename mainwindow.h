@@ -73,7 +73,7 @@ private:
     Ui::MainWindow *ui;
     QByteArray curMsgBytes;
     QUdpSocket *m_udpS;
-    QStandardItemModel *msgListMode;
+    QStandardItemModel *msgTableMode;
     QString remote_ip = "127.0.0.1";
     quint16 remote_port = 10001;
     QList<QByteArray> msgBytesList;
