@@ -69,6 +69,8 @@ private slots:
 
     void applyConfig();
 
+    void countTotalBytesNum();
+
 private:
     Ui::MainWindow *ui;
     QByteArray curMsgBytes;

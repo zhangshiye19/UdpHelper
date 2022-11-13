@@ -31,7 +31,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->msgTable->horizontalHeader()->setStretchLastSection(true);  // 最后一个填充空白
     ui->msgTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
-    QObject::connect(ui->msgTable, &QTableView::doubleClicked, this, &MainWindow::onClickedMsgTable);
+    // 总字节数标签
+    QObject::connect(ui->toolButton, &QToolButton::clicked, this, &MainWindow::countTotalBytesNum);
+//    QObject::connect(ui->dataTableWidget, &QTableWidget::itemChanged, this, &MainWindow::countTotalBytesNum);
 }
 
 
@@ -45,8 +47,20 @@ void MainWindow::addDataTableField(const QString &fieldName, const QString &fiel
     // 下拉框，选择数据类型
     QComboBox *combobox = new QComboBox();
     // 数据类型
-    QStringList typeList{"int64", "int32", "int16", "char", "uint8", "uint16", "uint32", "uint64", "float", "double"};
-    combobox->addItems(typeList);
+//    QStringList typeList{"int64", "int32", "int16", "char", "uint8", "uint16", "uint32", "uint64", "float", "double"};
+//    combobox->addItems(typeList);
+    combobox->addItem("char", 1);
+    combobox->addItem("uint8", 1);
+    combobox->addItem("int64", 8);
+    combobox->addItem("int32", 4);
+    combobox->addItem("int16", 2);
+    combobox->addItem("uint64", 8);
+    combobox->addItem("uint32", 4);
+    combobox->addItem("uint16", 2);
+    combobox->addItem("float", 4);
+    combobox->addItem("double", 8);
+
+
     combobox->setCurrentText(fieldType);
     ui->dataTableWidget->setCellWidget(row, 1, combobox);
 
@@ -66,7 +80,7 @@ QByteArray MainWindow::readDataTableToMsg() {
     for (int row = 0; row < rowCount; row++) {
         QComboBox *combobox = dynamic_cast<QComboBox *>(ui->dataTableWidget->cellWidget(row, 1));
         QString text = ui->dataTableWidget->item(row, 2)->text();
-        if(text.isEmpty()) {
+        if (text.isEmpty()) {
             continue;
         }
         QString comboboxSelectedText = combobox->currentText();
@@ -354,4 +368,16 @@ void MainWindow::loadDataTemplate(const QString &filename) {
 void MainWindow::applyConfig() {
     ui->configLineEditIP->setText(this->remote_ip);
     ui->configLineEditPort->setText(QString::number(this->remote_port));
+}
+
+void MainWindow::countTotalBytesNum() {
+    int rowCount = ui->dataTableWidget->rowCount();
+    int totalBytesNum = 0;
+    for (int i = 0; i < rowCount; i++) {
+        QComboBox *comboBox = dynamic_cast<QComboBox *>(ui->dataTableWidget->cellWidget(i, 1));
+        int sizeOfType = comboBox->currentData().toInt();
+        int lengthOfArray = ui->dataTableWidget->item(i, 3)->text().toInt();
+        totalBytesNum += sizeOfType * lengthOfArray;
+    }
+    ui->label_3->setText("总字节数："+QString::number(totalBytesNum));
 }
