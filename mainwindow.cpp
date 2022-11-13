@@ -60,12 +60,15 @@ void MainWindow::delDataTableField(int row) {
     ui->dataTableWidget->removeRow(row);
 }
 
-QByteArray MainWindow::readTableData() {
+QByteArray MainWindow::readDataTableToMsg() {
     const int rowCount = ui->dataTableWidget->rowCount();
     QByteArray bytes;
     for (int row = 0; row < rowCount; row++) {
         QComboBox *combobox = dynamic_cast<QComboBox *>(ui->dataTableWidget->cellWidget(row, 1));
         QString text = ui->dataTableWidget->item(row, 2)->text();
+        if(text.isEmpty()) {
+            continue;
+        }
         QString comboboxSelectedText = combobox->currentText();
         if (comboboxSelectedText == "int64") {
             std::int64_t long_data = text.toLongLong();
@@ -167,17 +170,17 @@ void MainWindow::on_configButtonApply_clicked() {
 
 
 void MainWindow::on_dataButtonReader_clicked() {
-    this->writeTableData();
+    this->writeDataTableFromMsg();
 }
 
 // 数据写入到消息框
 void MainWindow::on_dataButtonWriter_clicked() {
-    QByteArray bytes = this->readTableData();
+    QByteArray bytes = this->readDataTableToMsg();
     this->setMsgText(bytes);
 }
 
 // 数据写入到表
-void MainWindow::writeTableData() {
+void MainWindow::writeDataTableFromMsg() {
     size_t offset = 0;
     size_t size = this->curMsgBytes.size();
     char *data = this->curMsgBytes.data();
@@ -245,8 +248,8 @@ MainWindow::addLogToMsgList(const QByteArray &data, quint64 length, const QStrin
                             const QString &toIP, const QString &toPort) {
     const int rowCount = ui->msgTable->model()->rowCount();
     this->msgBytesList.append(data);
-    QList<QStandardItem *> info{new QStandardItem(fromIP),
-                                new QStandardItem(fromPort),
+    QList<QStandardItem *> info{new QStandardItem(fromIP + ":" + fromPort),
+                                new QStandardItem(toIP + ":" + toPort),
                                 new QStandardItem(QString::number(length))};
     msgListMode->insertRow(rowCount, info);
 }

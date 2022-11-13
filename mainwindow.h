@@ -25,8 +25,8 @@ public:
     void addDataTableField(const QString &fieldName, const QString &fieldType, const QString &fieldValue,
                            const QString &fieldLength);
     void delDataTableField(int row);
-    QByteArray readTableData();
-    void writeTableData();
+    QByteArray readDataTableToMsg();
+    void writeDataTableFromMsg();
 
     // 添加接收到的udp数据
     void addLogToMsgList(const QByteArray &data, quint64 length, const QString &fromIP, const QString &fromPort,
