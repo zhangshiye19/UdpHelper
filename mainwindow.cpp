@@ -31,6 +31,9 @@ MainWindow::MainWindow(QWidget *parent)
     ui->msgTable->horizontalHeader()->setStretchLastSection(true);  // 最后一个填充空白
     ui->msgTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
+    // 双击
+    QObject::connect(ui->msgTable,&QTableView::doubleClicked,this,&MainWindow::onClickedMsgTable);
+
     // 总字节数标签
     QObject::connect(ui->toolButton, &QToolButton::clicked, this, &MainWindow::countTotalBytesNum);
 //    QObject::connect(ui->dataTableWidget, &QTableWidget::itemChanged, this, &MainWindow::countTotalBytesNum);

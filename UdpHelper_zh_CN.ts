@@ -136,7 +136,7 @@
         <translation type="unfinished"></translation>
     </message>
     <message>
-        <location filename="mainwindow.cpp" line="154"/>
+        <location filename="mainwindow.cpp" line="157"/>
         <source>载入文件</source>
         <translation type="unfinished"></translation>
     </message>
