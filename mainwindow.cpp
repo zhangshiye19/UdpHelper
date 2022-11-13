@@ -10,6 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
 //    QObject::connect(ui->dataTableWidget, &QTableWidget::itemChanged, this, &MainWindow::countTotalBytesNum);
 
     // udp
+    m_udpS = new QUdpSocket(this);
     this->setUdpBind();
 //    m_udpS = new QUdpSocket(this);
 //    m_udpS->bind(QHostAddress::Any, this->loc_port, QUdpSocket::ShareAddress);
@@ -185,10 +186,8 @@ void MainWindow::on_configButtonApply_clicked() {
 }
 
 void MainWindow::setUdpBind() {
-    if (m_udpS != nullptr) {
-        delete m_udpS;
-    }
-    m_udpS = new QUdpSocket(this);
+//    m_udpS = new QUdpSocket(this);
+    m_udpS->close();
     m_udpS->bind(QHostAddress::Any, this->loc_port, QUdpSocket::ShareAddress);
     QObject::connect(this->m_udpS, &QUdpSocket::readyRead, this, &MainWindow::onReceiveUdpMsg);
 }
