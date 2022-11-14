@@ -1,0 +1,50 @@
+[
+    {
+        "length": "1",
+        "name": "wMsgNo",
+        "type": "uint16",
+        "value": "61693"
+    },
+    {
+        "length": "1",
+        "name": "wMsgLength",
+        "type": "uint16",
+        "value": "70"
+    },
+    {
+        "length": "1",
+        "name": "wDevID",
+        "type": "uint16",
+        "value": "12345"
+    },
+    {
+        "length": "1",
+        "name": "dLongtitude",
+        "type": "double",
+        "value": "11.2"
+    },
+    {
+        "length": "1",
+        "name": "dLatitude",
+        "type": "double",
+        "value": "30.1"
+    },
+    {
+        "length": "1",
+        "name": "dHeight",
+        "type": "double",
+        "value": "500"
+    },
+    {
+        "length": "1",
+        "name": "mode",
+        "type": "uint8",
+        "value": "1"
+    },
+    {
+        "length": "39",
+        "name": "bReserve",
+        "type": "char",
+        "value": "0;1;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0;0"
+    }
+]
