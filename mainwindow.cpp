@@ -1,6 +1,7 @@
 #include <QJsonArray>
 #include <QJsonObject>
 #include <QJsonDocument>
+#include <QMessageBox>
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 
@@ -188,7 +189,10 @@ void MainWindow::on_configButtonApply_clicked() {
 void MainWindow::setUdpBind() {
 //    m_udpS = new QUdpSocket(this);
     m_udpS->close();
-    m_udpS->bind(QHostAddress::Any, this->loc_port, QUdpSocket::ShareAddress);
+    bool isBindSuccess = m_udpS->bind(QHostAddress::Any, this->loc_port, QUdpSocket::ShareAddress);
+    if(!isBindSuccess) {
+        QMessageBox::critical(this, tr("警告"), tr("端口绑定失败"));
+    }
     QObject::connect(this->m_udpS, &QUdpSocket::readyRead, this, &MainWindow::onReceiveUdpMsg);
 }
 
@@ -232,7 +236,7 @@ void MainWindow::writeDataTableFromMsg() {
             std::int16_t *value = (std::int16_t *) (data + offset);
             offset += sizeof *value;
             ui->dataTableWidget->item(row, 2)->setText(QString::number(*value));
-        } else if (comboboxSelectedText == "char" || comboboxSelectedText == "uint8") {
+        } else if (comboboxSelectedText == "uint8") {
             //
             size_t length = ui->dataTableWidget->item(row, 3)->text().toULongLong();
             QStringList chs;
@@ -241,6 +245,15 @@ void MainWindow::writeDataTableFromMsg() {
                 chs.push_back(QString::number(ch));
             }
             offset += (sizeof(std::uint8_t) * length);
+            ui->dataTableWidget->item(row, 2)->setText(chs.join(";"));
+        }else if(comboboxSelectedText == "char") {
+            size_t length = ui->dataTableWidget->item(row, 3)->text().toULongLong();
+            QStringList chs;
+            for (int i = 0; i < length; ++i) {
+                char ch = *(char *) (data + offset + i);
+                chs.push_back(QString::number(ch));
+            }
+            offset += (sizeof(char) * length);
             ui->dataTableWidget->item(row, 2)->setText(chs.join(";"));
         } else if (comboboxSelectedText == "double") {
             std::double_t *value = (std::double_t *) (data + offset);
